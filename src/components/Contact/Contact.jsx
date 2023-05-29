@@ -1,18 +1,21 @@
-import { deleteContact } from "redux/operations";
+import { deleteContactThunk } from "redux/operations";
 import { DeleteItem, Name, Number } from "./Contact.styled";
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectIsLoading } from "redux/selectors";
 
-const Contact = ({ contact }) => {
+const Contact = ({ contact: { name, phone, id } }) => {
     const dispatch = useDispatch();
-
-    const handleDelete = () => dispatch(deleteContact(contact.id));
+    const isLoading = useSelector(selectIsLoading);
 
     return (
-                <>
-                    <Name>{contact.name}</Name>
-                    <Number>{contact.number}</Number>
-                    <DeleteItem type="button" onClick={handleDelete}>x</DeleteItem>
-                </>
+        <>
+            <div>
+                <Name>{name}</Name>
+                <Number>{phone}</Number>
+            </div>
+            <DeleteItem type="button" onClick={() => dispatch(deleteContactThunk(id))}>x</DeleteItem>
+            {isLoading && <div>Loading...</div>  }
+        </>
     )
 };
 
